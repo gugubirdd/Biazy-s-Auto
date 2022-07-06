@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Tables - SB Admin</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@300;400&family=Nunito:wght@200&family=Ubuntu+Condensed&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+        <link href="static/css/profile.css" rel="stylesheet" />
+        <link href="static/css/styles.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <script async src='/cdn-cgi/bm/cv/669835187/api.js'></script><script async src='/cdn-cgi/bm/cv/669835187/api.js'></script></head>
+    <body class="sb-nav-fixed">
+
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="">View Profile</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Search-->
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <a class="nav-link" href="/">
+                                <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                                Home
+                            </a>
+                            <a class="nav-link" href="/profile">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                                My Profile
+                            </a>
+                            <a class="nav-link" href="/wishlist">
+                                <div class="sb-nav-link-icon"><i class="fas fa-heart"></i></div>
+                                My Wishlist
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        {{ account.get_title() }}. {{ account.get_first_name() }} {{ account.get_last_name() }}
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Your Profile</h1>
+                    </div>
+                    <div class="page-content page-container" id="page-content">
+                        <div class="padding">
+                            <div class="row container d-flex justify-content-center">
+                                <div class="col-xl-10 col-md-12">
+                                    <div class="card user-card-full">
+                                        <div class="row m-l-0 m-r-0">
+                                            <div class="col-sm-4 bg-c-lite-green user-profile">
+                                                <div class="card-block text-center text-white">
+                                                    <div class="m-b-25 position-relative d-flex justify-content-center"><div onclick = "openfile()" id="pfpContainer"><img id="imageprofile" class="img-fluid rounded-circle img-radius" src="/static/assets/profiles/{{ account.get_image() }}" alt="User-Profile-Image"><div class="overlay"><div class="text">CHANGE AVATAR</div></div></div></div>
+                                                    <h6 class="f-w-600">{{ account.get_title() }}. {{ account.get_first_name() }} {{ account.get_last_name() }}</h6>
+                                                    <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8">
+                                                <div class="card-block">
+                                                    {% if 'password_changed' in session %}
+                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        {{ session.pop('password_changed') }}
+                                                    </div>
+                                                    {% endif %}
+
+                                                    {% if 'old_password_wrong' in session %}
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        {{ session.pop('old_password_wrong') }}
+                                                    </div>
+                                                    {% endif %}
+
+                                                    {% if 'new_password_diff' in session %}
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        {{ session.pop('new_password_diff') }}
+                                                    </div>
+                                                    {% endif %}
+
+                                                    {% if 'password_invalid' in session %}
+                                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        {{ session.pop('password_invalid') }}
+                                                    </div>
+                                                    {% endif %}
+
+                                                    {% if 'selfaccount_updated' in session %}
+                                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        {{ session.pop('selfaccount_updated') }}
+                                                    </div>
+                                                    {% endif %}
+
+                                                    {% if 'invalid_file_type' in session %}
+                                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                            Only <strong>{{ session.pop('invalid_file_type') }}</strong> file types are allowed.
+                                                        </div>
+                                                    {% endif %}
+
+                                                    <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Personal Information</h6>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <p class="m-b-10 f-w-600">Email</p>
+                                                            <h6 class="text-muted f-w-400">{{ account.get_email() }}</h6>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p class="m-b-10 f-w-600">Phone</p>
+                                                            <h6 class="text-muted f-w-400">{{ account.get_phone() }}</h6>
+                                                        </div>
+                                                    </div>
+                                                    {% for key in caraccounts_dict %}
+                                                    {% if session['email'] in caraccounts_dict.get(key).get_email() %}
+                                                    <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Car Details</h6>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <p class="m-b-10 f-w-600">Make</p>
+                                                            <h6 class="text-muted f-w-400">{{ account.get_make() }}</h6>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p class="m-b-10 f-w-600">Model</p>
+                                                            <h6 class="text-muted f-w-400">{{ account.get_model() }}</h6>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    <br>
+                                                    <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Account Settings</h6>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <button type="button" class="small mb-3 btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModal3_{{account.get_account_id()}}">
+                                                              Edit Profile
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <button type="button" class="small mb-3 btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#myModal2_{{account.get_account_id()}}">
+                                                              Reset Password
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Account Removal</h6>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <button type="button" class="small mb-3 btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#myModal_{{account.get_account_id()}}">
+                                                              Deactivate Account
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <button type="button" class="small mb-3  btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#myModal4_{{account.get_account_id()}}">
+                                                              Delete Account
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- The Modal -->
+                                                    <div class="modal" id="myModal_{{account.get_account_id()}}">
+                                                      <div class="modal-dialog">
+                                                        <div class="modal-content">
+
+                                                          <!-- Modal Header -->
+                                                          <div class="modal-header">
+                                                            <h4 class="modal-title">Deactivate Account</h4>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                          </div>
+
+                                                          <!-- Modal body -->
+                                                          <div class="modal-body">
+                                                             Are you sure you want to deactivate your account temporarily?
+                                                             <br>
+                                                             Your account will be re-activated when you log back in.
+                                                          </div>
+
+                                                          <!-- Modal footer -->
+                                                        {% for key in accounts_dict %}
+                                                          {% if session['email'] == accounts_dict.get(key).get_email() %}
+                                                          <div class="modal-footer">
+                                                            <a href="{{url_for('deactivate', id=account.get_account_id())}}" type="button" class="btn btn-danger">Confirm</a>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                          </div>
+                                                          {% endif %}
+                                                        {% endfor %}
+                                                        {% for key in caraccounts_dict %}
+                                                          {% if session['email'] == caraccounts_dict.get(key).get_email() %}
+                                                          <div class="modal-footer">
+                                                            <a href="{{url_for('deactivatecar', id=account.get_account_id())}}" type="button" class="btn btn-danger">Confirm</a>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                          </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        </div>
+                                                      </div>
+                                                    </div>
+
+
+                                                    <!-- The Modal -->
+                                                    <div class="modal" id="myModal2_{{account.get_account_id()}}">
+                                                      <div class="modal-dialog">
+                                                        <div class="modal-content">
+
+                                                          <!-- Modal Header -->
+                                                          <div class="modal-header">
+                                                            <h4 class="modal-title">Reset Password</h4>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                          </div>
+
+                                                          {% from "includes/_formHelper.html" import render_field %}
+                                                          <!-- Modal body -->
+                                                        {% for key in accounts_dict %}
+                                                        {% if session['email'] == accounts_dict.get(key).get_email() %}
+                                                        <form method="POST" action="{{url_for('resetpassword', id=account.get_account_id())}}">
+                                                          <div class="modal-body">
+                                                            <div class="form-floating mb-3 input-group">
+                                                                {{ render_field(form.old_password, class="form-control", id="password") }}
+                                                                <i class="bi bi-eye-slash input-group-text" id="togglePassword"></i>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                {{ render_field(form.new_password, class="form-control") }}
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                {{ render_field(form.confirm_new_password, class="form-control") }}
+                                                            </div>
+                                                          </div>
+                                                          <!-- Modal footer -->
+
+                                                          <div class="modal-footer">
+                                                            <input value="Reset" type="submit" class="btn btn-warning">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                          </div>
+                                                        </form>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        {% for key in caraccounts_dict %}
+                                                        {% if session['email'] == caraccounts_dict.get(key).get_email() %}
+                                                        <form method="POST" action="{{url_for('resetpasswordcar', id=account.get_account_id())}}">
+                                                          <div class="modal-body">
+                                                            <div class="form-floating mb-3 input-group">
+                                                                {{ render_field(form.old_password, class="form-control", id="password") }}
+                                                                <i class="bi bi-eye-slash input-group-text" id="togglePassword"></i>
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                {{ render_field(form.new_password, class="form-control") }}
+                                                            </div>
+                                                            <div class="form-floating mb-3">
+                                                                {{ render_field(form.confirm_new_password, class="form-control") }}
+                                                            </div>
+                                                          </div>
+                                                          <!-- Modal footer -->
+
+                                                          <div class="modal-footer">
+                                                            <input value="Reset" type="submit" class="btn btn-warning">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                          </div>
+                                                        </form>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        </div>
+                                                      </div>
+                                                    </div>
+
+
+                                                    <!-- The Modal -->
+                                                    <div class="modal" id="myModal3_{{account.get_account_id()}}">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+
+                                                                <!-- Modal Header -->
+                                                                <div class="modal-header">
+                                                                <h4 class="modal-title">Edit Profile Details</h4>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                                </div>
+                                                                {% from "includes/_formHelper.html" import render_field %}
+                                                                <!-- Modal body -->
+                                                                {% for key in accounts_dict %}
+                                                                {% if session['email'] == accounts_dict.get(key).get_email() %}
+                                                                <form method="POST" action="{{url_for('selfupdate_account', id=account.get_account_id())}}">
+                                                                <div class="modal-body">
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                            {{ render_field(form2.first_name, class="form-control", value=account.get_first_name()) }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                                {{ render_field(form2.last_name, class="form-control", value=account.get_last_name()) }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                            {{ render_field(form2.title, class="form-control") }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                                {{ render_field(form2.phone, class="form-control", value=account.get_phone(), oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');") }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-floating mb-3">
+                                                                        {{ render_field(form2.email, class="form-control", value=account.get_email()) }}
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Modal footer -->
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" value="Update" class="btn btn-primary">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                </div>
+                                                                </form>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                                {% for key in caraccounts_dict %}
+                                                                {% if session['email'] == caraccounts_dict.get(key).get_email() %}
+                                                                <form method="POST" action="{{url_for('carselfupdate_account', id=account.get_account_id())}}">
+                                                                <div class="modal-body">
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating mb-3 mb-md-0">
+                                                                                <div class="form-floating"></div>
+                                                                                {{ render_field(form4.first_name, class="form-control", value=account.get_first_name()) }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                                {{ render_field(form4.last_name, class="form-control", value=account.get_last_name()) }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                            {{ render_field(form4.title, class="form-control") }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                                {{ render_field(form4.phone , class="form-control" , oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');") }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-floating mb-3">
+                                                                        {{ render_field(form4.email, class="form-control", value=account.get_email()) }}
+                                                                    </div>
+                                                                    <div class="row mb-3">
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                            {{ render_field(form4.make, class="form-control", value=account.get_make()) }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <div class="form-floating">
+                                                                                {{ render_field(form4.model, class="form-control", value=account.get_model()) }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Modal footer -->
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" value="Update" class="btn btn-primary">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                </div>
+                                                                </form>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <!-- The Modal -->
+                                                    <div class="modal" id="myModal4_{{account.get_account_id()}}">
+                                                        <div class="modal-dialog">
+                                                          <div class="modal-content">
+
+                                                            <!-- Modal Header -->
+                                                            <div class="modal-header">
+                                                              <h4 class="modal-title">Delete Account</h4>
+                                                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+
+                                                            <!-- Modal body -->
+                                                            <div class="modal-body">
+                                                               Are you sure you want to delete your account permanently?
+                                                               <br>
+                                                               Your account will be gone FOREVER.
+                                                            </div>
+
+                                                            <!-- Modal footer -->
+                                                            {% for key in accounts_dict %}
+                                                              {% if session['email'] == accounts_dict.get(key).get_email() %}
+                                                                <form method="POST" action="{{url_for('selfdelete_account', id=account.get_account_id())}}">
+                                                                <div class="modal-footer">
+                                                                  <input type="submit" value="Confirm" class="btn btn-danger">
+                                                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                </div>
+                                                                </form>
+                                                              {% endif %}
+                                                            {% endfor %}
+                                                              {% for key in caraccounts_dict %}
+                                                                {% if session['email'] == caraccounts_dict.get(key).get_email() %}
+                                                                    <form method="POST" action="{{url_for('selfdelete_caraccount', id=account.get_account_id())}}">
+                                                                    <div class="modal-footer">
+                                                                      <input type="submit" value="Confirm" class="btn btn-danger">
+                                                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                    </div>
+                                                                    </form>
+                                                                {% endif %}
+                                                              {% endfor %}
+                                                          </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <form id="profilepicform" method="POST" enctype="multipart/form-data">
+                                                        <div>
+                                                          {{ render_field(form3.profilepic, class="form-control", id="profilepic") }}
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Biazy's Auto 2021</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="/static/js/scripts.js"></script>
+        <script src="/static/js/profile.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+        <script src="static/js/datatables-simple-demo.js"></script>
+    <script type="text/javascript">(function(){window['__CF$cv$params']={r:'6d5355ef0abf493b',m:'VSKurkjXVXnU5eYIPglAFDTmHTJHBUvP.VkadDicrZQ-1643468484-0-AWP+yYSeHFM5gvumuMFU6h0qoykCGYCIzPAfYd9xMvwJtOgxIrGe7E8twh/6RMiy3N8EZr7U30xgQche6JqTxvQrq31MrbGuOUse7PSTJ0fnKdqrqIVs8+WSO44etHwyhgj3DtuYR9cz4Ak1dRjCFSrXWTF7Yhlyxpye6Hon8oa8Hpg9rPct43U0jyPnEIpkBA==',s:[0x30e7da167d,0x06c472a3ca],}})();</script><script type="text/javascript">(function(){window['__CF$cv$params']={r:'6d5362272e3d6c63',m:'3KzVOT8m6npei71MyLX3q3pHOrM471UaAFEIEIrh_9E-1643468985-0-AUmNtlXXFNF8v2XPgRDbloILyqpsVjjSXF5U3UC636qoLTpT6GfniBXtO9fsgqiVQaRmd2IKGqzwYxjtHG3V6ZxHKGEZ5dQfkL1tY7Bx9K2P+IWHpMVK2Fj2fBbIEnIRPyJD2EuOuaknYQf1TZ8bbX/ic/1IxQ5af522oNpUYrd6ly/Bk06MFX5k2MRko3/grg==',s:[0xd1379061d2,0x3680163e46],}})();</script></body>
+</html>
+

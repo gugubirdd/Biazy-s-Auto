@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Biazy's Auto</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="static/css1/styles.css" rel="stylesheet"/>
+        <link href="static/css/index.css" rel="stylesheet"/>
+
+
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top">Home</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        {% if 'login_success' in session %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>&nbsp{{ session ['login_success'] }}</a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/profile">View Profile</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#retrieve_cust_cars">Cars</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#accessory">Accessories</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#signup">Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contactForm">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+                <div class="d-flex justify-content-center">
+                    <div class="text-center">
+                        <h1 class="mx-auto my-0 text-uppercase">Biazy's Auto</h1>
+                        <a class="btn btn-primary" href="#about">Inquire Now</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- About-->
+        <section class="about-section text-center" id="about">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="text-white mb-4">About Us</h2>
+                        <p class="text-white-50">
+                            We sell Cars, Accessories, Provide Services for your Cars, and Host Events
+                            <br>
+                            We have everything that <strong>YOU</strong> and <strong>YOUR CAR</strong> needs!
+                        </p>
+                        <br>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h1 class="mx-auto text-uppercase text-white">TODAY'S FEATURED PRODUCT</h1>
+                    <br>
+                    <img id="featuredProduct" class="img-fluid" src="static/images/{{ featureditem['featured'] }}" alt="..." style="height:295px;border:2px solid white;margin-bottom:30px;border-radius:15px;"/>
+                    <br>
+                    {% if featureditem['car'] == False %}
+                    <a class="btn btn-primary" style="margin-bottom:30px;" href="#accessory">Shop Now</a>
+                    {% else %}
+                    <a class="btn btn-primary" style="margin-bottom:30px;" href="#retrieve_cust_cars">Shop Now</a>
+                    {% endif %}
+                    <br>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cars -->
+        <section class="car-section">
+            <br>
+            <div id="retrieve_cust_cars"></div>
+            <br>
+            <h1 class="display-4 mb-4" style="text-align: center;">Our Cars</h1>
+            <br>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><strong>Normal Cars</strong></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><strong>Electric Cars</strong></button>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content"><br>
+                <div class="tab-pane container-fluid active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <br>
+                    <div class="container">
+                        <div class="row">
+                            {% for car in cars_list %}
+                            <div class="col-md-3 mt-3">
+                                <div class="card h-100">
+
+                                    {% if car.get_car_availability() == "In Stock" %}
+                                    <span style="color: #26DA00; font-weight: bold; text-align:center;">{{ car.get_car_availability() }}</span>
+                                    {% elif car.get_car_availability() == "Out-of-Stock" %}
+                                    <span style="color: #FE1414; font-weight: bold; text-align:center;">{{ car.get_car_availability() }}</span>
+                                    {% elif car.get_car_availability() == "Unavailable" %}
+                                    <span style="color: #7b809a; font-weight: bold; text-align:center;">{{ car.get_car_availability() }}</span>
+                                    {% endif %}
+
+                                    <div class="text-center"><img class="product-image" src="static/assets/images/{{ car.get_car_image() }}" width="250" height="140"></div>
+                                    <br>
+                                    <div class="about text-center" style="margin-bottom:15px;">
+                                        <h5>{{ car.get_car_model() }} {{ car.get_car_name() }}</h5><span>S${{ car.get_car_price() }}</span>
+                                    </div>
+                                    <div class="cart-button mt-auto px-2 d-flex justify-content-center align-self-center" style="margin-bottom:15px;">
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#view{{car.get_car_id()}}">
+                                          VIEW DETAILS
+                                        </button>
+                                    </div>
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="view{{car.get_car_id()}}">
+                                      <div class="modal-dialog product-modal">
+                                        <div class="modal-content">
+
+                                          <!-- Modal Header -->
+                                          <div class="modal-header">
+                                            <h4 class="modal-title">{{ car.get_car_model() }} {{ car.get_car_name() }} Details</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                          </div>
+                                          <!-- Modal body -->
+                                          <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row no-gutters">
+                                                    <div class="col">
+                                                        <div class="demo">
+                                                            <img class="product-image" src="/static/assets/images/{{ car.get_car_image() }}"  style="width: 460px; height: 255px;"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="d-flex flex-row align-items-center">
+                                                            {% if car.get_car_availability() == "In Stock" %}
+                                                            <span class="fw-bold ms-1 fs-5" style="color: #26DA00; font-weight: bold;">{{ car.get_car_availability() }}</span>
+                                                            {% elif car.get_car_availability() == "Out-of-Stock" %}
+                                                            <span class="fw-bold ms-1 fs-5" style="color: #FE1414; font-weight: bold;">{{ car.get_car_availability() }}</span>
+                                                            {% elif car.get_car_availability() == "Unavailable" %}
+                                                            <span class="fw-bold ms-1 fs-5" style="color: #7b809a; font-weight: bold;">{{ car.get_car_availability() }}</span>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="about"><h4 class="font-weight-bold">{{ car.get_car_model() }} {{ car.get_car_name() }}</h4>
+                                                            <h5 class="font-weight-bold">S${{ car.get_car_price() }}</h5>
+                                                        </div>
+                                                        <div class="product-description">
+                                                            <div class="mt-2"><strong>Description</strong>
+                                                                <p>{{ car.get_car_description() }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="buttons container-fluid">
+                                                            {% if 'login_success' in session %}
+                                                            <button onclick="window.location.href='/addwishlist3/{{ car.get_car_id() }}'" class="float-end" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                Add to Wishlist
+                                                            </button>
+                                                            {% elif 'wish_exists' in session %}
+                                                            <button type="button" class="float-end" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="This item is already in your wishlist!" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                Add to Wishlist
+                                                            </button>
+                                                            {% else %}
+                                                            <button type="button" class="float-end" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="You must be logged in to do this!" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                Add to Wishlist
+                                                            </button>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane container-fluid" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <br>
+                    <div class="container" style="margin-left: 65px;">
+                        <div class="row">
+                            {% for electric_car in electric_cars_list %}
+                            <div class="col-md-3 mt-3">
+                                <div class="card h-100">
+
+                                    {% if electric_car.get_car_availability() == "In Stock" %}
+                                    <span style="color: #26DA00; font-weight: bold;text-align:center;">{{ electric_car.get_car_availability() }}</span>
+                                    {% elif electric_car.get_car_availability() == "Out-of-Stock" %}
+                                    <span style="color: #FE1414; font-weight: bold;text-align:center;">{{ electric_car.get_car_availability() }}</span>
+                                    {% elif electric_car.get_car_availability() == "Unavailable" %}
+                                    <span style="color: #7b809a; font-weight: bold;text-align:center;">{{ electric_car.get_car_availability() }}</span>
+                                    {% endif %}
+
+                                    <div class="text-center"><img class="product-image" src="static/assets/images/{{ electric_car.get_car_image() }}" width="250" height="140"></div>
+                                    <br>
+                                    <div class="about text-center" style="margin-bottom:15px;">
+                                        <h5>{{ electric_car.get_car_model() }} {{ electric_car.get_car_name() }}</h5><span>S$ {{ electric_car.get_car_price() }}</span>
+                                    </div>
+                                    <div class="cart-button mt-auto px-2 d-flex justify-content-center align-self-center" style="margin-bottom:15px;">
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#view2{{electric_car.get_electric_car_id()}}">
+                                          VIEW DETAILS
+                                        </button>
+                                    </div>
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="view2{{electric_car.get_electric_car_id()}}">
+                                      <div class="modal-dialog product-modal">
+                                        <div class="modal-content">
+
+                                          <!-- Modal Header -->
+                                          <div class="modal-header">
+                                            <h4 class="modal-title">{{ electric_car.get_car_model() }} {{ electric_car.get_car_name() }} Details</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                          </div>
+                                          <!-- Modal body -->
+                                          <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row no-gutters">
+                                                    <div class="col">
+                                                            <div class="demo">
+                                                                <img class="product-image" src="/static/assets/images/{{ electric_car.get_car_image() }}" style="width: 460px; height: 255px;"/>
+                                                            </div>
+                                                    </div>
+                                                    <div class="col">
+                                                            <div class="d-flex flex-row align-items-center">
+                                                                {% if electric_car.get_car_availability() == "In Stock" %}
+                                                                <span class="fw-bold ms-1 fs-5" style="color: #26DA00; font-weight: bold;">{{ electric_car.get_car_availability() }}</span>
+                                                                {% elif electric_car.get_car_availability() == "Out-of-Stock" %}
+                                                                <span class="fw-bold ms-1 fs-5" style="color: #FE1414; font-weight: bold;">{{ electric_car.get_car_availability() }}</span>
+                                                                {% elif electric_car.get_car_availability() == "Unavailable" %}
+                                                                <span class="fw-bold ms-1 fs-5" style="color: #7b809a; font-weight: bold;">{{ electric_car.get_car_availability() }}</span>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="about"><h4 class="font-weight-bold">{{ electric_car.get_car_model() }} {{ electric_car.get_car_name() }}</h4>
+                                                                <h5 class="font-weight-bold">S${{ electric_car.get_car_price() }}</h5>
+                                                            </div>
+                                                            <div class="product-description">
+                                                                <div class="mt-2"><strong>Description</strong>
+                                                                    <p>{{ electric_car.get_car_description() }}</p>
+                                                                </div>
+                                                                <div class=""><strong>Battery Capacity: </strong><span class="">{{ electric_car.get_car_battery_capacity() }} kWh</span>
+                                                                </div>
+                                                                <div class=""><strong>Charging Duration: </strong><span class="">{{ electric_car.get_car_charging_duration() }} Hrs</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="buttons container-fluid">
+                                                                {% if 'login_success' in session %}
+                                                                <button onclick="window.location.href='/addwishlist4/{{ electric_car.get_electric_car_id() }}'" class="float-end" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                    Add to Wishlist
+                                                                </button>
+                                                                {% else %}
+                                                                <button type="button" class="float-end" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="You must be logged in to do this!" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                    Add to Wishlist
+                                                                </button>
+                                                                {% endif %}
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </section>
+
+        <!-- Accessories-->
+        <section class="accessory-section" id="accessory">
+            <h1 class="display-4 mb-4" style="color:white; text-align: center;">Accessories</h1>
+            <br>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs justify-content-center" id="myTab1" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab" aria-controls="messages" aria-selected="true"><strong>Accessories</strong></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false"><strong>Electronic Accessories</strong></button>
+                </li>
+            </ul>
+            <div class="tab-content"><br>
+                <div class="tab-pane active" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+                    <br>
+                    <div class="container">
+                        <div class="row">
+                            {% for accessory in accessories_list %}
+                            <div class="col-md-3 mt-3">
+                                <div class="card h-100">
+                                    {% if accessory.get_quantity() == 0 %}
+                                    <span style="color: #FE1414; font-weight: bold; text-align:center;">Out-of-Stock</span>
+                                    {% elif accessory.get_quantity() <= 20 %}
+                                    <span style="color: #FFA500; font-weight: bold; text-align:center;">Selling Fast!</span>
+                                    {% elif accessory.get_quantity() > 20 %}
+                                    <span style="color: #26DA00; font-weight: bold; text-align:center;">In Stock</span>
+                                    {% endif %}
+                                    <div class="text-center"><img src="static/images/{{ accessory.get_image() }}" width="250" height="200"></div>
+                                    <br>
+                                    <div class="about text-center" style="margin-bottom:15px;">
+                                        <h5>{{ accessory.get_name() }}</h5><span>S${{ accessory.get_price() }}</span>
+                                    </div>
+                                    <div class="cart-button mt-auto px-2 d-flex justify-content-center align-self-center" style="margin-bottom:15px;">
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#view3{{accessory.get_accessory_id()}}">
+                                          VIEW DETAILS
+                                        </button>
+                                    </div>
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="view3{{accessory.get_accessory_id()}}">
+                                      <div class="modal-dialog product-modal">
+                                        <div class="modal-content">
+
+                                          <!-- Modal Header -->
+                                          <div class="modal-header">
+                                            <h4 class="modal-title">{{ accessory.get_name() }} Details</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                          </div>
+                                          <!-- Modal body -->
+                                          <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row no-gutters">
+                                                    <div class="col">
+                                                        <div class="demo">
+                                                            <img src="/static/images/{{ accessory.get_image() }}" style="width: 460px; height: 400px;"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="about"><h4 class="font-weight-bold">{{ accessory.get_name() }}</h4>
+                                                            <h5 class="font-weight-bold">S${{ accessory.get_price() }}</h5>
+                                                        </div>
+                                                        <div class="product-description">
+                                                            <div class="mt-2"><strong>Description</strong>
+                                                                <p>{{ accessory.get_description() }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="buttons container-fluid">
+                                                            {% if 'login_success' in session %}
+                                                            <button onclick="window.location.href='/addwishlist1/{{ accessory.get_accessory_id() }}'" class="float-end" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                Add to Wishlist
+                                                            </button>
+                                                            {% else %}
+                                                            <button type="button" class="float-end" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="You must be logged in to do this!" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                Add to Wishlist
+                                                            </button>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                    <br>
+                    <div class="container" style="margin-left: 65px;">
+                        <div class="row">
+                            {% for electronicaccessory in electronicaccessory_list %}
+                            <div class="col-md-3 mt-3">
+                                <div class="card h-100">
+                                    {% if electronicaccessory.get_quantity() == 0 %}
+                                    <span style="color: #FE1414; font-weight: bold; text-align:center;">Out-of-Stock</span>
+                                    {% elif electronicaccessory.get_quantity() <= 20 %}
+                                    <span style="color: #FFA500; font-weight: bold; text-align:center;">Selling Fast!</span>
+                                    {% elif electronicaccessory.get_quantity() > 20 %}
+                                    <span style="color: #26DA00; font-weight: bold; text-align:center;">In Stock</span>
+                                    {% endif %}
+                                    <div class="text-center"><img src="static/images/{{ electronicaccessory.get_image() }}" width="250" height="200"></div>
+                                    <br>
+                                    <div class="about text-center" style="margin-bottom:15px;">
+                                        <h5>{{ electronicaccessory.get_name() }}</h5><span>S${{ electronicaccessory.get_price() }}</span>
+                                    </div>
+                                    <div class="cart-button mt-auto px-2 d-flex justify-content-center align-self-center" style="margin-bottom:15px;">
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#view4{{electronicaccessory.get_electronicaccessory_id()}}">
+                                          VIEW DETAILS
+                                        </button>
+                                    </div>
+                                    <!-- The Modal -->
+                                    <div class="modal fade" id="view4{{electronicaccessory.get_electronicaccessory_id()}}">
+                                      <div class="modal-dialog product-modal">
+                                        <div class="modal-content">
+
+                                          <!-- Modal Header -->
+                                          <div class="modal-header">
+                                            <h4 class="modal-title">{{ electronicaccessory.get_name() }} Details</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                          </div>
+                                          <!-- Modal body -->
+                                          <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row no-gutters">
+                                                    <div class="col">
+                                                        <div class="demo">
+
+                                                            <img src="/static/images/{{ electronicaccessory.get_image() }}" style="width: 460px; height: 400px;"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="about"><h4 class="font-weight-bold">{{ electronicaccessory.get_name() }}</h4>
+                                                            <h5 class="font-weight-bold">S${{ electronicaccessory.get_price() }}</h5>
+                                                        </div>
+                                                        <div class="product-description">
+                                                            <div class="mt-2"><strong>Description</strong>
+                                                                <p>{{ electronicaccessory.get_description() }}</p>
+                                                            </div>
+                                                            <div class="mt-2"><strong>Battery Type</strong>
+                                                                <p>{{ electronicaccessory.get_battery_type() }}</p>
+                                                            </div>
+                                                            <div class="mt-2"><strong>Batteries Required</strong>
+                                                                <p>{{ electronicaccessory.get_batteries_required() }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="buttons container-fluid">
+                                                            {% if 'login_success' in session %}
+                                                            <button onclick="window.location.href='/addwishlist2/{{ electronicaccessory.get_electronicaccessory_id() }}'" class="float-end" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                Add to Wishlist
+                                                            </button>
+                                                            {% else %}
+                                                            <button type="button" class="float-end" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="You must be logged in to do this!" style="width: 170px; height: 40px; border: none; border-radius: 25px; margin-top:50px; margin-bottom: 25px; background-color: #126ef9; color: #fff;">
+                                                                Add to Wishlist
+                                                            </button>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </section>
+
+        <!-- Services-->
+        <section class="signup-section" id="signup">
+            <h1 class="display-4 mb-4 " style="color:white; text-align: center;">Our Services</h1>
+            <ul class="nav nav-tabs justify-content-center" id="myTab2" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="hello-tab" data-bs-toggle="tab" data-bs-target="#hello" type="button" role="tab" aria-controls="hello" aria-selected="true"><strong>Services</strong></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="goodbye-tab" data-bs-toggle="tab" data-bs-target="#goodbye" type="button" role="tab" aria-controls="goodbye" aria-selected="false"><strong>Car Services</strong></button>
+                </li>
+            </ul>
+            <div class="tab-content"><br>
+                <div class="tab-pane active" id="hello" role="tabpanel" aria-labelledby="hello-tab">
+                    {% for service in services_list %}
+                      {% if service.get_availability() == 'Available': %}
+                      <div class="card" id="service5" style="width: 20rem;border:1" >
+                        <img src="/static/images/{{ service.get_image() }}" width="250" class="imgi" height="200">
+                        <div class="card-body">
+                          <h5 class="card-title" style="text-align:center;">{{ service.get_name() }}</h5>
+
+                          <!-- Button trigger modal -->
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{ service.get_service_id() }}" style="margin-left:50px;">
+                        Learn More
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModalCenter{{ service.get_service_id() }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered service-modal" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalCenterTitle">{{ service.get_name()}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <img src="/static/images/{{ service.get_image() }}" width="450" class="imgi1" height="300">
+                              {{ service.get_description() }}
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        </div>
+                      </div>
+                      {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="tab-pane" id="goodbye" role="tabpanel" aria-labelledby="goodbye-tab">
+                    {% for carservice in carservices_list %}
+                      {% if carservice.get_availability() == 'Available': %}
+                      <div class="card" id="service6" style="width: 20rem;border:1">
+                        <img src="/static/images/{{ carservice.get_image() }}" width="250" class="imgi" height="200">
+                        <div class="card-body">
+                          <h5 class="card-title" style="text-align:center;">{{ carservice.get_name() }}</h5>
+
+                          <!-- Button trigger modal -->
+                      <button type="button" class="btn btn-primary self-align-end" data-bs-toggle="modal" data-bs-target="#exampleModalCenter1{{ carservice.get_carservice_id() }}" style="margin-left:50px;">
+                        Learn More
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModalCenter1{{ carservice.get_carservice_id() }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered service-modal" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalCenterTitle1">{{ carservice.get_name()}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <img src="/static/images/{{ carservice.get_image() }}" width="450" class="imgi1" height="300">
+                              <table>
+                              <tr><td><strong>Location:</strong> {{ carservice.get_location() }}</td></tr>
+                              <tr><td><strong>Hotline:</strong> {{ carservice.get_hotline() }}</td></tr>
+                              <tr><td><strong>Starting Hour:</strong> {{ carservice.get_starting_hour() }}</td></tr>
+                              <tr><td><strong>Ending Hour:</strong> {{ carservice.get_ending_hour() }}</td></tr>
+                              <tr><td><strong>Opening Days:</strong> {{ carservice.get_opening_days() }}</td></tr>
+                              <tr><td><strong>Description:</strong> {{ carservice.get_description() }}</td></tr>
+                              </table>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        </div>
+                      </div>
+                      {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Events-->
+        <section class="events-section" id="events">
+            <h1 class="display-4 mb-3" style="color:white; text-align: center;">Events</h1>
+            {% for publicevent in publicevent_list %}
+            {% if publicevent.get_startDate() >= current_date: %}
+              <div class="card" id="service7" style="width: 20rem;border:1" >
+                <img src="/static/images/{{ publicevent.get_image() }}" width="250" class="imgi" height="200">
+                <div class="card-body text-center">
+                  <h5 class="card-title" style="text-align:center;">{{ publicevent.get_title() }}</h5>
+
+
+
+                  <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#servicemodal{{ publicevent.get_publiceventid() }}">
+                Learn More
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="servicemodal{{ publicevent.get_publiceventid() }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered service-modal" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{{ publicevent.get_title() }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <img src="/static/images/{{ publicevent.get_image() }}" width="450" class="imgi1" height="300">
+                        <div style="text-align:left; margin-left:10px;"><strong>Cost: </strong><span>${{ publicevent.get_cost() }}</span>
+                        </div>
+                        <div style="text-align:left; margin-left:10px;"><strong>Venue: </strong><span>{{ publicevent.get_venue() }}</span>
+                        </div>
+                        <div style="text-align:left; margin-left:10px;"><strong>Capacity: </strong><span>{{ publicevent.get_capacity() }}</span>
+                        </div>
+                        <div style="text-align:left; margin-left:10px;"><strong>Starts on: </strong><span>{{ publicevent.get_startDate() }}, {{ publicevent.get_startTime() }}</span>
+                        </div>
+                        <div style="text-align:left; margin-left:10px;"><strong>Ends on: </strong><span>{{ publicevent.get_endDate() }}, {{ publicevent.get_endTime() }}</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                </div>
+              </div>
+            {% endif %}
+            {% endfor %}
+        </section>
+
+        <!-- Contact-->
+        <section class="contact-section bg-black" id="contactForm">
+            <h1 class="display-4 mb-3" style="color:white; text-align: center;">Contact Us</h1>
+            <br>
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Address</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">369 Geylang Avenue 10 #01-13</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-envelope text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Email</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50"><a href="#!">support@biazysauto.com</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-mobile-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Phone</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">+65 9955 3311</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social d-flex justify-content-center">
+                    <a class="mx-2" href="#!"><i class="fab fa-twitter"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer-->
+        <footer class="footer bg-black small text-center text-white-50"><div class="container px-4 px-lg-5">Copyright &copy; Biazy's Auto 2021</div></footer>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="static/js/index.js"></script>
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script>
+            var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+            var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+              return new bootstrap.Popover(popoverTriggerEl)
+            })
+        </script>
+    </body>
+</html>
